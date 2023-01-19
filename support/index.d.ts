@@ -76,6 +76,12 @@ declare namespace Cypress {
      */
     importMetamaskAccount(privateKey: string): Chainable<Subject>;
     /**
+     * Import new account in metamask using private key if it doesn't exist
+     * @example
+     * cy.importMetamaskAccountIfNotExist('private_key')
+     */
+    importMetamaskAccountIfNotExist(privateKey: string): Chainable<Subject>;
+    /**
      * Create new account in metamask
      * @example
      * cy.createMetamaskAccount()

@@ -335,6 +335,28 @@ module.exports = {
     await switchToCypressIfNotActive();
     return true;
   },
+  importAccountIfNotExist: async privateKey => {
+    await switchToMetamaskIfNotActive();
+    await module.exports.goToImportAccount();
+    await playwright.waitAndType(
+      mainPageElements.importAccount.input,
+      privateKey,
+    );
+    try {
+      await playwright.waitAndClick(
+        mainPageElements.importAccount.importButton,
+        await playwright.metamaskWindow(),
+      );
+    } catch {
+      await playwright.waitAndClick(
+        mainPageElements.importAccount.cancelButton,
+        await playwright.metamaskWindow(),
+      );
+    }
+    await module.exports.closePopupAndTooltips();
+    await switchToCypressIfNotActive();
+    return true;
+  },
   createAccount: async accountName => {
     if (accountName) {
       accountName = accountName.toLowerCase();

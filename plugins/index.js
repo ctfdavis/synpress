@@ -102,6 +102,10 @@ module.exports = (on, config) => {
       const imported = await metamask.importAccount(privateKey);
       return imported;
     },
+    importMetamaskAccountIfNotExist: async privateKey => {
+      const imported = await metamask.importAccountIfNotExist(privateKey);
+      return imported;
+    },
     createMetamaskAccount: async accountName => {
       const created = await metamask.createAccount(accountName);
       return created;

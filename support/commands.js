@@ -49,6 +49,10 @@ Cypress.Commands.add('importMetamaskAccount', privateKey => {
   return cy.task('importMetamaskAccount', privateKey);
 });
 
+Cypress.Commands.add('importMetamaskAccountIfNotExist', privateKey => {
+  return cy.task('importMetamaskAccountIfNotExist', privateKey);
+})
+
 Cypress.Commands.add('createMetamaskAccount', accountName => {
   return cy.task('createMetamaskAccount', accountName);
 });
