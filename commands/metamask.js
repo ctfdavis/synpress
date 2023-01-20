@@ -832,6 +832,46 @@ module.exports = {
     }
     return true;
   },
+  acceptAccessIfPresent: async options => {
+    const notificationPage = await playwright.switchToMetamaskNotification();
+    try {
+      if (options && options.allAccounts) {
+        await playwright.waitAndClick(
+          notificationPageElements.selectAllCheckbox,
+          notificationPage,
+        );
+      }
+      await playwright.waitAndClick(
+        notificationPageElements.nextButton,
+        notificationPage,
+        {
+          timeout: 1000,
+          optional: true,
+        }
+      );
+      if (options && options.signInSignature) {
+        await playwright.waitAndClick(
+          permissionsPageElements.connectButton,
+          notificationPage,
+          {
+            timeout: 1000,
+            optional: true,
+          }
+        );
+        await module.exports.confirmSignatureRequest();
+      } else {
+        await playwright.waitAndClick(
+          permissionsPageElements.connectButton,
+          notificationPage,
+          {
+            timeout: 1000,
+            optional: true,
+          }
+        );
+      }
+    } catch {}
+    return true;
+  },
   confirmTransaction: async gasConfig => {
     let txData = {};
     const notificationPage = await playwright.switchToMetamaskNotification();

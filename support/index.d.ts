@@ -277,6 +277,16 @@ declare namespace Cypress {
       signInSignature?: boolean;
     }): Chainable<Subject>;
     /**
+     * Accept metamask access request if present
+     * @example
+     * cy.acceptMetamaskAccessIfPresent()
+     * cy.acceptMetamaskAccessIfPresent({allAccounts: true, signInSignature: true})
+     */
+    acceptMetamaskAccessIfPresent(options?: {
+      allAccounts?: boolean;
+      signInSignature?: boolean;
+    }): Chainable<Subject>;
+    /**
      * Confirm metamask transaction (auto-detects eip-1559 and legacy transactions)
      * @example
      * cy.confirmMetamaskTransaction()
