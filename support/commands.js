@@ -220,6 +220,10 @@ Cypress.Commands.add('allowMetamaskToAddAndSwitchNetwork', () => {
   return cy.task('allowMetamaskToAddAndSwitchNetwork');
 });
 
+Cypress.Commands.add('allowMetamaskToAddAndSwitchNetworkIfPresent', () => {
+  return cy.task('allowMetamaskToAddAndSwitchNetworkIfPresent');
+});
+
 Cypress.Commands.add('unlockMetamask', (password = 'Tester@1234') => {
   return cy.task('unlockMetamask', password);
 });

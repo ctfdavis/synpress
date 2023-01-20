@@ -153,35 +153,75 @@ module.exports = {
     }
     return element;
   },
-  waitAndClick: async (selector, page = metamaskWindow, args = {}) => {
-    const element = await module.exports.waitFor(selector, page);
-    if (args.numberOfClicks && !args.waitForEvent) {
-      await element.click({
-        clickCount: args.numberOfClicks,
-        force: args.force,
+  waitForIfPresent: async (selector, page = metamaskWindow) => {
+    await module.exports.waitUntilStable(page);
+    try {
+      await page.waitForSelector(selector, {
+        strict: false,
+        timeout: 1000,
       });
-    } else if (args.numberOfClicks && args.waitForEvent) {
-      await Promise.all([
-        page.waitForEvent(args.waitForEvent),
-        element.click({ clickCount: args.numberOfClicks, force: args.force }),
-      ]);
-    } else if (args.waitForEvent) {
-      if (args.waitForEvent.includes('navi')) {
-        await Promise.all([
-          page.waitForNavigation(),
-          element.click({ force: args.force }),
-        ]);
-      } else {
-        await Promise.all([
-          page.waitForEvent(args.waitForEvent),
-          element.click({ force: args.force }),
-        ]);
+      const element = page.locator(selector).first();
+      await element.waitFor();
+      await element.focus();
+      if (process.env.STABLE_MODE) {
+        if (!isNaN(process.env.STABLE_MODE)) {
+          await page.waitForTimeout(Number(process.env.STABLE_MODE));
+        } else {
+          await page.waitForTimeout(300);
+        }
+      }
+      return element;
+    } catch {
+      return null;
+    }
+  },
+  waitAndClick: async (selector, page = metamaskWindow, args = {}) => {
+    let element
+    if (args.optional) {
+      element = await module.exports.waitForIfPresent(selector, page);
+      if (element === null) {
+        return null;
       }
     } else {
-      await element.click({ force: args.force });
+      element = await module.exports.waitFor(selector, page);
     }
-    await module.exports.waitUntilStable(page);
-    return element;
+    try {
+      if (args.numberOfClicks && !args.waitForEvent) {
+        await element.click({
+          clickCount: args.numberOfClicks,
+          force: args.force,
+        });
+      } else if (args.numberOfClicks && args.waitForEvent) {
+        await Promise.all([
+          page.waitForEvent(args.waitForEvent),
+          element.click({ clickCount: args.numberOfClicks, force: args.force }),
+        ]);
+      } else if (args.waitForEvent) {
+        if (args.waitForEvent.includes('navi')) {
+          await Promise.all([
+            page.waitForNavigation(),
+            element.click({ force: args.force }),
+          ]);
+        } else {
+          await Promise.all([
+            page.waitForEvent(args.waitForEvent),
+            element.click({ force: args.force }),
+          ]);
+        }
+      } else {
+        await element.click({ force: args.force });
+      }
+      await module.exports.waitUntilStable(page);
+      if (args.timeout) {
+        await sleep(args.timeout);
+      }
+      return element;
+    } catch (e) {
+      if (args.optional) {
+        return null;
+      }
+      throw e;
+    }
   },
   waitAndClickByText: async (selector, text, page = metamaskWindow) => {
     await module.exports.waitFor(selector, page);

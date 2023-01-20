@@ -323,6 +323,12 @@ declare namespace Cypress {
      */
     allowMetamaskToAddAndSwitchNetwork(): Chainable<Subject>;
     /**
+     * Allow site to switch network in metamask and switch to it if the prompt is shown
+     * @example
+     * cy.allowMetamaskToSwitchNetworkAndSwitchIfPresent()
+     */
+    allowMetamaskToAddAndSwitchNetworkIfPresent(): Chainable<Subject>;
+    /**
      * Unlock metamask
      * @example
      * cy.unlockMetamask('password')

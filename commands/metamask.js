@@ -1109,6 +1109,16 @@ module.exports = {
     }
     return true;
   },
+  allowToAddNetworkIfPresent: async () => {
+    const notificationPage = await playwright.switchToMetamaskNotification();
+    await playwright.waitAndClick(
+      confirmationPageElements.footer.approveButton,
+      notificationPage,
+      {
+        optional: true,
+      }
+    );
+  },
   rejectToAddNetwork: async () => {
     const notificationPage = await playwright.switchToMetamaskNotification();
     await playwright.waitAndClick(
@@ -1127,6 +1137,15 @@ module.exports = {
     );
     return true;
   },
+  allowToSwitchNetworkIfPresent: async () => {
+    const notificationPage = await playwright.switchToMetamaskNotification();
+    await playwright.waitAndClick(
+      confirmationPageElements.footer.approveButton,
+      notificationPage,
+      { waitForEvent: 'close', optional: true },
+    );
+    return true;
+  },
   rejectToSwitchNetwork: async () => {
     const notificationPage = await playwright.switchToMetamaskNotification();
     await playwright.waitAndClick(
@@ -1139,6 +1158,13 @@ module.exports = {
   allowToAddAndSwitchNetwork: async () => {
     await module.exports.allowToAddNetwork();
     await module.exports.allowToSwitchNetwork();
+    return true;
+  },
+  allowToAddAndSwitchNetworkIfPresent: async () => {
+    try {
+      await module.exports.allowToAddNetworkIfPresent();
+      await module.exports.allowToSwitchNetworkIfPresent();
+    } catch {}
     return true;
   },
   getWalletAddress: async () => {

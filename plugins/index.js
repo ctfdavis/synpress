@@ -261,6 +261,10 @@ module.exports = (on, config) => {
       const allowed = await metamask.allowToAddAndSwitchNetwork();
       return allowed;
     },
+    allowMetamaskToAddAndSwitchNetworkIfPresent: async () => {
+      await metamask.allowToAddAndSwitchNetworkIfPresent();
+      return true;
+    },
     getMetamaskWalletAddress: async () => {
       const walletAddress = await metamask.getWalletAddress();
       return walletAddress;
