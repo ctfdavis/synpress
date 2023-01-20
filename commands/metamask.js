@@ -827,7 +827,7 @@ module.exports = {
       await playwright.waitAndClick(
         permissionsPageElements.connectButton,
         notificationPage,
-        // { waitForEvent: 'close' },
+        { timeout: 1000 }
       );
     }
     return true;
